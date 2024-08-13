@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nex Finanças</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="logo/logo.png" alt="Nex Finanças">
+        </div>
+        <h1>Nex Finanças</h1>
+        <label for="goalInput">Selecione sua meta para guardar:</label>
+        <input type="text" id="goalInput" name="goalInput" placeholder="Insira o valor" oninput="handleInputChange(this.value)">
+        <input type="range" id="goal" name="goal" min="50000" max="10000000" value="50000" step="100" oninput="handleSliderChange(this.value)">
+        <div class="value-display">
+            <span id="goalValue">R$ 500,00</span>
+        </div>
+        <div id="error-message" class="error-message"></div>
+        <br>
+        <button onclick="handleSubmit()">Enviar</button>
+    </div>
+
+    <script>
+        function handleInputChange(value) {
+            // Remover todos os caracteres não numéricos, exceto a vírgula
+            let numericValue = value.replace(/[^\d,]/g, '').replace(',', '.');
+            if (numericValue) {
+                numericValue = parseFloat(numericValue) * 100; // converter para centavos
+            } else {
+                numericValue = 0;
+            }
+
+            // Limitar o valor ao intervalo permitido
+            numericValue = Math.min(Math.max(numericValue, 50000), 10000000);
+            
+            // Formatar o valor com pontos e vírgula para centavos
+            const formattedValue = (numericValue / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            
+            // Atualizar o slider e o valor exibido
+            document.getElementById('goal').value = numericValue;
+            document.getElementById('goalValue').textContent = `R$ ${formattedValue}`;
+        }
+
+        function handleSliderChange(value) {
+            // Atualizar a exibição com base no valor do slider
+            const formattedValue = (value / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('goalValue').textContent = `R$ ${formattedValue}`;
+            document.getElementById('goalInput').value = formattedValue;
+        }
+
+        function handleSubmit() {
+            const inputField = document.getElementById('goalInput');
+            let numericValue = inputField.value.replace(/[^\d,]/g, '').replace(',', '.');
+            numericValue = numericValue ? parseFloat(numericValue) * 100 : 0;
+
+            const minVal = 50000;
+            const maxVal = 10000000;
+
+            if (numericValue < minVal || numericValue > maxVal) {
+                // Mostrar mensagem de erro
+                const errorMessage = numericValue < minVal ? 'O valor deve ser no mínimo R$ 500,00.' : 'O valor deve ser no máximo R$ 10.000.000,00.';
+                document.getElementById('error-message').textContent = errorMessage;
+                inputField.focus(); // Focar no campo de entrada para o usuário corrigir
+            } else {
+                // Limpar mensagem de erro
+                document.getElementById('error-message').textContent = '';
+                // Redirecionar para o link
+                window.location.href = 'https://www.youtube.com/';
+            }
+        }
+    </script>
+</body>
+</html>
